@@ -13,8 +13,9 @@
 
 		$(document).ready(function(){
             function getRandomBackground(){
-                var bg2 = ["castle", "city", "desert", "mars","rainforest","sea","slum","space"];
-                return("background_"+bg2[Math.floor(Math.random()*bg2.length)]+".png");
+                var bg2 = ["castle", "city", "desert", "mars","rainforest","sea","slum","space","blue_sea","Landschaft","Landschaft_blue","Sunset"];
+                bg = bg2[Math.floor(Math.random()*bg2.length)];
+                return("background_"+bg+".png");
             }
             var randomBackground = getRandomBackground();
             var bg = '#000 url(images/bg/'+randomBackground+') no-repeat';
@@ -91,7 +92,7 @@
                 }
 
 		//Enemys deklarieren und initialisieren
-		var enemys_length=40;//TODO: levelabhängig
+		var enemys_length=300;//TODO: levelabhängig
 		var enemys = new Array(lifes_length);
 		var enemySpeed=8;
 		var enemysVisible=new Array(enemys_length);
@@ -214,11 +215,14 @@
                 ctx.drawImage(life,maxX-i*45-60,20);
             }
             ctx.font="30px Verdana";
+            ctx.strokeStyle = "red";
+
             ctx.strokeText(Math.round(points/500)+" Points!",50,50);
 			
 			//life.src = 'images/lifes.png';
 			life.src = 'images/life_small.png';
 		}
+
 		function gameOver(){
             var gameOver=new Image();
 
