@@ -42,6 +42,10 @@
 <body>
 	<canvas id="myCanvas"></canvas>
 	<script>
+	//	var lifes=[5][2];//5 lifes
+	//	1  2  3  4  5
+	//x	maxX
+	//y	0-maxY
 		var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
         ctx.fillStyle = "#FF0000";
@@ -52,21 +56,53 @@
 		var maxX = canvas.width;
 		var maxY = canvas.height;
 		
-		var imageObj = new Image();
-
-		imageObj.onload = function() {
-			ypos=maxY/2;
-			ctx.drawImage(imageObj, xpos, ypos);
-		};
-		imageObj.src = 'player.png';
-		updateScreen();
-		function updateScreen(){
-			ctx.clearRect(0,0,maxX,maxY);
-			ctx.drawImage(imageObj, xpos,ypos);
-			
-			setTimeout(updateScreen,10);
+		var lifes_length=5;//TODO: aus datei lesen -> kommt noch fgt
+		var lifes=new Array(lifes_length);
+		var lifesStarted=new Array(lifes_length);
+		//lifes array mit werten füllen
+		for(var i=0;i<lifes_length;i++){
+			lifes[i]=new Array(2);
+			lifes[i][0]=maxX;
+		}
+		for(var i=0;i<lifes_length;i++){
+			var lHeight=Math.round(Math.random()*maxY);
+			lifes[i][1]=lHeight;
 		}
 		
+		
+		var player = new Image();
+
+		player.onload = function() {
+			ypos=maxY/2;
+			ctx.drawImage(player, xpos, ypos);
+		};
+		player.src = 'player.png';
+		var time=new Date().getMilliSeconds();
+		updateScreen();
+		
+		function updateScreen(){
+			ctx.clearRect(0,0,maxX,maxY);
+			ctx.drawImage(player, xpos,ypos);
+			
+			if(time+(Math.round(Math.random()*5000)+2000)<new Date().getMilliSeconds()){//TODO: funzt ned :P
+				time=new Date().getMilliSeconds();
+				alert("yoo");
+				startLifes();
+			}
+			moveLifes();
+			setTimeout(updateScreen,10);
+		}
+		function startLifes(){
+			var number=Math.round(Math.random()*lifes_length);
+			lifesStarted[number]=true;
+		}
+		function moveLifes(){
+			for(var i=0;i<lifes_length;i++){
+				if(lifesStarted[i]){
+					lifes[i][0]-=5;
+				}
+			}
+		}
 	</script>
 </body>
 </html>
