@@ -3,13 +3,18 @@
 	<script language="javascript" type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
 	<script>
 		var xpos=50,ypos=0;
+        var bg;
         var xlength = 40, ylength = 40;
 		var isPressed=false;
 		var playerHeight=40;
+
+
+
+
 		$(document).ready(function(){
             function getRandomBackground(){
-                var bg = ["castle", "city", "desert", "mars","rainforest","sea","slum","space"];
-                return("background_"+bg[Math.floor(Math.random()*bg.length)]+".png");
+                var bg2 = ["castle", "city", "desert", "mars","rainforest","sea","slum","space"];
+                return("background_"+bg2[Math.floor(Math.random()*bg2.length)]+".png");
             }
             var randomBackground = getRandomBackground();
             var bg = '#000 url(images/bg/'+randomBackground+') no-repeat';
@@ -61,6 +66,8 @@
 		var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
         ctx.fillStyle = "#FF0000";
+
+
 		
 		canvas = document.getElementById("myCanvas");
 		canvas.width = window.innerWidth; //document.width is obsolete
@@ -68,6 +75,20 @@
 		var maxX = canvas.width;
 		var maxY = canvas.height;
 	    var points= 0;
+        var enemy=new Image();
+
+        var player = new Image();
+        var life=new Image();
+
+        //Je nach Browser spezielle Methode
+        var requestAnimationFrame = window.requestAnimationFrame    ||
+                window.mozRequestAnimationFrame    ||
+                window.webkitRequestAnimationFrame ||
+                window.msRequestAnimationFrame     ||
+                window.oRequestAnimationFrame      ||
+                function(callback){ //Browser die kein HTML5 unterstützen
+                    return window.setTimeout(callback, 1000/60);
+                }
 
 		//Enemys deklarieren und initialisieren
 		var enemys_length=40;//TODO: levelabhängig
@@ -106,7 +127,7 @@
 			lifes[i][1]=lHeight;
 		}
 		
-		var player = new Image();
+
 
 		player.onload = function() {
 			ypos=maxY/2;
@@ -116,14 +137,14 @@
 		updateScreen();
 		
 		function updateScreen(){
-			ctx.clearRect(0,0,maxX,maxY);
+            moveEnemys();
+            moveLifes();
+            ctx.clearRect(0,0,maxX,maxY);
 			ctx.drawImage(player, xpos,ypos);
-			moveEnemys();
 			drawEnemys();
-			moveLifes();
 			drawLifes(); 
 			if(startLife >0)
-				setTimeout(updateScreen,15);
+                requestAnimationFrame(updateScreen);
             else
 				gameOver();
 			
@@ -156,52 +177,44 @@
         }
 		//Zeichnet alle Enemys
 		function drawEnemys(){
-			var enemy=new Image();
+            for(var i=0;i<enemys_length;i++){
+                if(checkCollision(enemys[i][0],enemys[i][1])&&enemysVisible[i]){
+                    startLife--;
+                    enemysVisible[i] = false;
+                }
+                if(enemys[i][0] < 0){
+                    enemysVisible[i] = false;
+                }
+                if(enemysVisible[i]){
+                    ctx.drawImage(enemy, enemys[i][0], enemys[i][1]);
+                }
 
-			enemy.onload = function() {
-				for(var i=0;i<enemys_length;i++){
-                    if(checkCollision(enemys[i][0],enemys[i][1])&&enemysVisible[i]){
-                        startLife--;
-                        enemysVisible[i] = false;
-                    }
-                    if(enemys[i][0] < 0){
-                        enemysVisible[i] = false;
-                    }
-					if(enemysVisible[i]){
-						ctx.drawImage(enemy, enemys[i][0], enemys[i][1]);
-					}
-
-				}
-			};
+            }
 			
 			//life.src = 'images/lifes.png';
 			enemy.src = 'images/enemy.png';
 		}
 		//Zeichnet alle Herzen
 		function drawLifes(){
-			var life=new Image();
+            for(var i=0;i<lifes_length;i++){
+                if(checkCollision(lifes[i][0],lifes[i][1])&&lifesVisible[i]){
+                    if(startLife < 5)
+                        startLife++;
+                    lifesVisible[i] = false;
+                }
+                if(lifes[i][0] < 0){
+                    lifesVisible[i] = false;
+                }
+                if(lifesVisible[i]){
+                    ctx.drawImage(life, lifes[i][0], lifes[i][1]);
+                }
 
-			life.onload = function() {
-				for(var i=0;i<lifes_length;i++){
-                    if(checkCollision(lifes[i][0],lifes[i][1])&&lifesVisible[i]){
-                        if(startLife < 5)
-                            startLife++;
-                        lifesVisible[i] = false;
-                    }
-                    if(lifes[i][0] < 0){
-                        lifesVisible[i] = false;
-                    }
-					if(lifesVisible[i]){
-						ctx.drawImage(life, lifes[i][0], lifes[i][1]);
-					}
-
-				}
-				for(var i=0;i<startLife;i++){
-					ctx.drawImage(life,maxX-i*45-60,20);
-				}
-                ctx.font="30px Verdana";
-                ctx.strokeText(Math.round(points/500)+" Points!",50,50);
-			};
+            }
+            for(var i=0;i<startLife;i++){
+                ctx.drawImage(life,maxX-i*45-60,20);
+            }
+            ctx.font="30px Verdana";
+            ctx.strokeText(Math.round(points/500)+" Points!",50,50);
 			
 			//life.src = 'images/lifes.png';
 			life.src = 'images/life_small.png';
