@@ -103,7 +103,7 @@
                 }
 
 		//Enemys deklarieren und initialisieren
-		var enemys_length=300;//TODO: levelabhängig
+		var enemys_length=400;//TODO: levelabhängig
 		var enemys = new Array(lifes_length);
 		var enemySpeed=8;
 		var enemysVisible=new Array(enemys_length);
@@ -227,8 +227,9 @@
             }
             ctx.font="30px Verdana";
             ctx.strokeStyle = "red";
-
-            ctx.strokeText(Math.round(points/500)+" Points!",50,50);
+            var points2 =  (Math.round(points/500));
+            var s = (points2 == 1 ? "Point!" : "Points");
+            ctx.strokeText(points2+" "+s,50,50);
 			
 			//life.src = 'images/lifes.png';
 			life.src = 'images/life_small.png';
