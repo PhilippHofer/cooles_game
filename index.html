@@ -19,6 +19,7 @@
 					ypos-=3;
 				}
 				setTimeout(movePlayerUp,15);
+				
 			}
 			function movePlayerDown(){
 				if(!isPressed&&ypos<window.innerHeight-playerHeight){
@@ -58,17 +59,20 @@
 		
 		var lifes_length=5;//TODO: aus datei lesen -> kommt noch fgt
 		var lifes=new Array(lifes_length);
+		var lifesVisible=new Array(lifes_length);
+		for(var i=0;i<lifes_length;i++){
+			lifesVisible[i]=true;
+		}
 		//lifes array mit werten füllen
 		for(var i=0;i<lifes_length;i++){
 			lifes[i]=new Array(2);
-			var xStart=Math.round(Math.random()*500)*-1;
+			var xStart=Math.round(Math.random()*10000)+1500;
 			lifes[i][0]=xStart;
 		}
 		for(var i=0;i<lifes_length;i++){
-			var lHeight=Math.round(Math.random()*maxY);
+			var lHeight=Math.round(Math.random()*(maxY-20));
 			lifes[i][1]=lHeight;
 		}
-		
 		
 		var player = new Image();
 
@@ -76,7 +80,7 @@
 			ypos=maxY/2;
 			ctx.drawImage(player, xpos, ypos);
 		};
-		player.src = 'player.png';
+		player.src = 'images/player.png';
 		updateScreen();
 		
 		function updateScreen(){
@@ -84,7 +88,7 @@
 			ctx.drawImage(player, xpos,ypos);
 			moveLifes();
 			drawLifes();
-			setTimeout(updateScreen,10);
+			setTimeout(updateScreen,15);
 		}
 		function moveLifes(){
 			for(var i=0;i<lifes_length;i++){
@@ -96,10 +100,12 @@
 
 			life.onload = function() {
 				for(var i=0;i<lifes_length;i++){
-					ctx.drawImage(life, lifes[i][0], lifes[i][1]);
+					if(lifesVisible[i]){
+						ctx.drawImage(life, lifes[i][0], lifes[i][1]);
+					}
 				}
 			};
-			life.src = 'life.png';
+			life.src = 'images/lifes.png';
 			}
 	</script>
 </body>
