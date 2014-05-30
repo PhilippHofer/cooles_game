@@ -100,13 +100,24 @@
 			ctx.drawImage(player, xpos,ypos);
 			moveLifes();
 			drawLifes();
-			setTimeout(updateScreen,15);
+			if(startLife >0) setTimeout(updateScreen,15);
+            else gameOver();
 		}
 		function moveLifes(){
 			for(var i=0;i<lifes_length;i++){
 				lifes[i][0]-=lifeSpeed;
 			}
 		}
+
+        function gameOver(){
+            var gameOver=new Image();
+
+            gameOver.onload = function() {
+                ctx.drawImage(gameOver, (maxX-605)/2, (maxY-574)/2); //Gameover.png -> 605*574px
+            };
+
+            gameOver.src = 'images/gameover.png';
+        }
 
 
         function checkCollision(lifeX,lifeY){ //Pos Leben
@@ -127,7 +138,7 @@
 			life.onload = function() {
 				for(var i=0;i<lifes_length;i++){
                     if(checkCollision(lifes[i][0],lifes[i][1])&&lifesVisible[i]){
-                        startLife++;
+                        startLife--;
                         lifesVisible[i] = false;
                     }
 					if(lifesVisible[i]){
