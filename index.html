@@ -75,6 +75,16 @@
 		for(var i=0;i<lifes_length;i++){
 			lifesVisible[i]=true;
 		}
+		//Enemys array mit werten füllen
+		for(var i=0;i<enemys_length;i++){
+			enemys[i]=new Array(2);
+			var xStart=Math.round(Math.random()*10000)+1500;
+			enemys[i][0]=xStart;
+		}
+		for(var i=0;i<enemys_length;i++){
+			var eHeight=Math.round(Math.random()*(maxY-20));
+			enemys[i][1]=eHeight;
+		}
 		//lifes array mit werten füllen
 		for(var i=0;i<lifes_length;i++){
 			lifes[i]=new Array(2);
@@ -98,11 +108,20 @@
 		function updateScreen(){
 			ctx.clearRect(0,0,maxX,maxY);
 			ctx.drawImage(player, xpos,ypos);
+			moveEnemys();
+			drawEnemys();
 			moveLifes();
 			drawLifes();
 			if(startLife >0) setTimeout(updateScreen,15);
             else gameOver();
 		}
+		//Enemys bewegen
+		function moveEnemys(){
+			for(var i=0;i<enemys_length;i++){
+				enemys[i][0]-=enemySpeed;
+			}
+		}
+		//Leben bewegen
 		function moveLifes(){
 			for(var i=0;i<lifes_length;i++){
 				lifes[i][0]-=lifeSpeed;
@@ -120,6 +139,7 @@
         }
 
 
+		//Überprüft ob eine Kollision vorliegt
         function checkCollision(lifeX,lifeY){ //Pos Leben
             //Check if Life auf da söbn y achse wie Person
             if(lifeY >= ypos-34 && lifeY <= ypos+ylength){
@@ -131,7 +151,27 @@
             }
             return(false);
         }
+		//Zeichnet alle Enemys
+		function drawEnemys(){
+			var enemy=new Image();
 
+			enemy.onload = function() {
+				for(var i=0;i<enemys_length;i++){
+                    if(checkCollision(enemys[i][0],enemys[i][1])&&enemysVisible[i]){
+                        startLife--;
+                        enemysVisible[i] = false;
+                    }
+					if(enemysVisible[i]){
+						ctx.drawImage(enemy, enemys[i][0], enemys[i][1]);
+					}
+
+				}
+			};
+			
+			//life.src = 'images/lifes.png';
+			enemy.src = 'images/enemy.png';
+		}
+		//Zeichnet alle Herzen
 		function drawLifes(){
 			var life=new Image();
 
