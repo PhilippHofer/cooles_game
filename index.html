@@ -6,6 +6,15 @@
 		var isPressed=false;
 		var playerHeight=40;
 		$(document).ready(function(){
+            function getRandomBackground(){
+                var bg = ["castle", "city", "desert", "mars","rainforest","sea","slum","space"];
+                return("background_"+bg[Math.floor(Math.random()*bg.length)]+".png");
+            }
+            var randomBackground = getRandomBackground();
+            var bg = '#000 url(images/bg/'+randomBackground+') no-repeat';
+            document.body.style.background = bg;
+            document.body.style.backgroundSize = "100%";
+
 			$("body").keydown(function(e) {
 				isPressed=true;
 			});
@@ -76,7 +85,7 @@
 			ypos=maxY/2;
 			ctx.drawImage(player, xpos, ypos);
 		};
-		player.src = 'player.png';
+		player.src = 'images/player.png';
 		updateScreen();
 		
 		function updateScreen(){
@@ -99,7 +108,7 @@
 					ctx.drawImage(life, lifes[i][0], lifes[i][1]);
 				}
 			};
-			life.src = 'life.png';
+			life.src = 'images/life_small.png';
 			}
 	</script>
 </body>
