@@ -188,6 +188,9 @@
                             startLife++;
                         lifesVisible[i] = false;
                     }
+                    if(lifes[i][0] < 0){
+                        lifesVisible[i] = false;
+                    }
 					if(lifesVisible[i]){
 						ctx.drawImage(life, lifes[i][0], lifes[i][1]);
 					}
