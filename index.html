@@ -67,8 +67,18 @@
 		canvas.height = window.innerHeight; //document.height is obsolete
 		var maxX = canvas.width;
 		var maxY = canvas.height;
+	    var points= 0;
 
-		var lifes_length=5;//TODO: aus datei lesen -> kommt noch fgt
+		//Enemys deklarieren und initialisieren
+		var enemys_length=40;//TODO: levelabhängig
+		var enemys = new Array(lifes_length);
+		var enemySpeed=8;
+		var enemysVisible=new Array(enemys_length);
+		for(var i=0;i<enemys_length;i++){
+			enemysVisible[i]=true;
+		}
+		//Leben deklarieren und initialisieren
+		var lifes_length=5;//immer gleich
 		var lifes=new Array(lifes_length);
         var startLife = 3, lifeSpeed=5;
 		var lifesVisible=new Array(lifes_length);
@@ -111,9 +121,12 @@
 			moveEnemys();
 			drawEnemys();
 			moveLifes();
-			drawLifes();
-			if(startLife >0) setTimeout(updateScreen,15);
-            else gameOver();
+			drawLifes(); 
+			if(startLife >0)
+				setTimeout(updateScreen,15);
+            else
+				gameOver();
+			
 		}
 		//Enemys bewegen
 		function moveEnemys(){
@@ -124,20 +137,10 @@
 		//Leben bewegen
 		function moveLifes(){
 			for(var i=0;i<lifes_length;i++){
+                points++;
 				lifes[i][0]-=lifeSpeed;
 			}
 		}
-
-        function gameOver(){
-            var gameOver=new Image();
-
-            gameOver.onload = function() {
-                ctx.drawImage(gameOver, (maxX-605)/2, (maxY-574)/2); //Gameover.png -> 605*574px
-            };
-
-            gameOver.src = 'images/gameover.png';
-        }
-
 
 		//Überprüft ob eine Kollision vorliegt
         function checkCollision(lifeX,lifeY){ //Pos Leben
@@ -161,6 +164,9 @@
                         startLife--;
                         enemysVisible[i] = false;
                     }
+                    if(enemys[i][0] < 0){
+                        enemysVisible[i] = false;
+                    }
 					if(enemysVisible[i]){
 						ctx.drawImage(enemy, enemys[i][0], enemys[i][1]);
 					}
@@ -178,7 +184,8 @@
 			life.onload = function() {
 				for(var i=0;i<lifes_length;i++){
                     if(checkCollision(lifes[i][0],lifes[i][1])&&lifesVisible[i]){
-                        startLife--;
+                        if(startLife < 5)
+                            startLife++;
                         lifesVisible[i] = false;
                     }
 					if(lifesVisible[i]){
@@ -189,11 +196,22 @@
 				for(var i=0;i<startLife;i++){
 					ctx.drawImage(life,maxX-i*45-60,20);
 				}
+                ctx.font="30px Verdana";
+                ctx.strokeText(Math.round(points/500)+" Points!",50,50);
 			};
 			
 			//life.src = 'images/lifes.png';
 			life.src = 'images/life_small.png';
 		}
+		function gameOver(){
+            var gameOver=new Image();
+
+            gameOver.onload = function() {
+                ctx.drawImage(gameOver, (maxX-605)/2, (maxY-574)/2); //Gameover.png -> 605*574px
+            };
+
+            gameOver.src = 'images/gameover.png';
+        }
 	</script>
 </body>
 </html>
