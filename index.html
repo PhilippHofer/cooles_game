@@ -111,12 +111,12 @@
 
         function checkCollision(lifeX,lifeY){ //Pos Leben
             //Check if Life auf da söbn y achse wie Person
-            if(lifeY >= ypos && lifeY <= ypos+ylength){
+            if(lifeY >= ypos-34 && lifeY <= ypos+ylength){
                 //Söwe auf da x Achse
                 if(lifeX >= xpos && lifeX <= xpos+xlength){
                     return(true);
                 }
-                return(false);
+                //return(false);
             }
             return(false);
         }
@@ -126,7 +126,7 @@
 
 			life.onload = function() {
 				for(var i=0;i<lifes_length;i++){
-                    if(checkCollision(lifes[i][0],lifes[i][1])){
+                    if(checkCollision(lifes[i][0],lifes[i][1])&&lifesVisible[i]){
                         startLife++;
                         lifesVisible[i] = false;
                     }
